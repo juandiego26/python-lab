@@ -26,7 +26,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-  return 'Hola, Alumnos de platzi'
+  return 'Hello, World!'
 
 ```
 requirements.txt
