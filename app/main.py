@@ -1,6 +1,6 @@
 import sys
 
-clients = 'Pablo,Ricardo,' ## creamos la variable global clients
+clients = ['Pablo', 'Ricardo'] ## creamos una lista de clientes
 
 
 def _print_welcome(): ## función para crear una lista de comandos en terminal
@@ -18,14 +18,14 @@ def _get_client_name(): ## función para obtener el nombre del cliente
   client_name = None
 
   while not client_name:
-    client_name = input('What\'s the client name?' + ' ').capitalize()
+    client_name = input('What\'s the client name?' + ' ').capitalize() ## Capitalize por si ingresan en mayuculas
 
-    if client_name == 'exit'.capitalize():
-      client_name = None
-      break
+    if client_name == 'exit'.capitalize(): ## para salir del programa y capitalize por si ingresan mayuculas
+      client_name = None ## no hay clientes
+      break ## sale del programa
 
   if not client_name:
-    sys.exit()
+    sys.exit() ## metódo exit() del modulo
 
   return client_name
 
@@ -34,22 +34,14 @@ def create_client(client_name): ## función create_client con el parámetro clie
   global clients ## accedemos a la variable global con el keyword global
 
   if client_name not in clients: ## para saber si cliente existe
-    clients += client_name ## añadimos el cliente
-    _add_comma() ## adicionamos la comma
+    clients.append(client_name) ## método append de la listas
   else:
     print('Client already is in the client\'s List')
 
 
-def _add_comma(): ## función para añadir una comma y reutilizar el código
-  global clients
-
-  clients += ','
-
-
 def search_client(client_name): ## función para buscar un cliente
-  client_list = clients.split(',') ## metodo split de los string para convertir a estructura separadas por ,
 
-  for client in client_list:
+  for client in clients:
     if client != client_name:
       continue ## continue
     else:
@@ -57,9 +49,8 @@ def search_client(client_name): ## función para buscar un cliente
 
 
 def list_clients(): ## función para imprimir toda la lista de clientes
-  global clients
-
-  print(clients)
+  for idx, client in enumerate(clients): ## para imprmir la lista de clientes
+    print(f'{idx}: {client}')
 
 
 def update_client(client_name): ## funcion para actualizar la lista de clientes
@@ -67,7 +58,8 @@ def update_client(client_name): ## funcion para actualizar la lista de clientes
 
   if client_name in clients:
     updated_client_name = input('What\'s the updated client name?' + ' ')
-    clients = clients.replace(client_name + ',', updated_client_name + ',')
+    index = clients.index(client_name)
+    clients[index] = updated_client_name
   else:
     print(_client_not_found())
 
@@ -76,7 +68,7 @@ def delete_client(client_name): ## función para borrar un cliente
   global clients
 
   if client_name in clients:
-    clients = clients.replace(client_name + ',', '')
+    clients.remove(client_name)
   else:
     print(_client_not_found())
 
@@ -94,8 +86,8 @@ if __name__ == '__main__': ## punto de entrada de la ejecución del script en Py
   if command == 'C': ## palabra reservada command para interacturar con la consola
     client_name = _get_client_name()
     create_client(client_name)
-    #list_clients()
-    print(clients)
+    list_clients()
+    # print(clients)
 
   elif command == 'L':
     list_clients()
@@ -103,14 +95,14 @@ if __name__ == '__main__': ## punto de entrada de la ejecución del script en Py
   elif command == 'U': ## operación de update
     client_name = _get_client_name()
     update_client(client_name)
-    #list_clients()
-    print(clients)
+    list_clients()
+    # print(clients)
 
   elif command == 'D': ## operación de delete
     client_name = _get_client_name()
     delete_client(client_name)
-    #list_clients()
-    print(clients)
+    list_clients()
+    # print(clients)
 
   elif command == 'S': ## operación de search
     client_name = _get_client_name()
