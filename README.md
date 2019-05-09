@@ -44,9 +44,13 @@ FLASK_ENV=development
 
 ```
 
-## run
+## run application servidor
 
 `(env)$ flask run`
+
+## run application app
+
+`(env)$ python main.py`
 
 ## Skills applied
 1. python

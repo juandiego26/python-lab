@@ -1,5 +1,6 @@
+import sys
 
-clients = 'Pablo,Ricardo' ## creamos la variable global clients
+clients = 'Pablo,Ricardo,' ## creamos la variable global clients
 
 
 def _print_welcome(): ## función para crear una lista de comandos en terminal
@@ -14,7 +15,19 @@ def _print_welcome(): ## función para crear una lista de comandos en terminal
 
 
 def _get_client_name(): ## función para obtener el nombre del cliente
-  return input('What\'s the client name?' + ' ').capitalize()
+  client_name = None
+
+  while not client_name:
+    client_name = input('What\'s the client name?' + ' ').capitalize()
+
+    if client_name == 'exit'.capitalize():
+      client_name = None
+      break
+
+  if not client_name:
+    sys.exit()
+
+  return client_name
 
 
 def create_client(client_name): ## función create_client con el parámetro client_name
