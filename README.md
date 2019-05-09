@@ -44,7 +44,7 @@ FLASK_ENV=development
 
 ```
 
-##run
+## run
 
 `(env)$ flask run`
 

@@ -1,5 +1,20 @@
 
-clients = 'pablo, ricardo, ' ## creamos la variable global clients
+clients = 'Pablo,Ricardo' ## creamos la variable global clients
+
+
+def _print_welcome(): ## función para crear una lista de comandos en terminal
+  print('WELCOME TO BICITHOPYA VENTAS')
+  print('*' * 50)
+  print('What would you like to do today?')
+  print('[C]reate client')
+  print('[L]ist clients')
+  print('[U]pdate client')
+  print('[D]elete client')
+  print('[S]earch client')
+
+
+def _get_client_name(): ## función para obtener el nombre del cliente
+  return input('What\'s the client name?' + ' ').capitalize()
 
 
 def create_client(client_name): ## función create_client con el parámetro client_name
@@ -12,7 +27,23 @@ def create_client(client_name): ## función create_client con el parámetro clie
     print('Client already is in the client\'s List')
 
 
-def list_clients(): ## función para imprimir la lista de clientes
+def _add_comma(): ## función para añadir una comma y reutilizar el código
+  global clients
+
+  clients += ','
+
+
+def search_client(client_name): ## función para buscar un cliente
+  client_list = clients.split(',') ## metodo split de los string para convertir a estructura separadas por ,
+
+  for client in client_list:
+    if client != client_name:
+      continue ## continue
+    else:
+      return True
+
+
+def list_clients(): ## función para imprimir toda la lista de clientes
   global clients
 
   print(clients)
@@ -28,7 +59,7 @@ def update_client(client_name): ## funcion para actualizar la lista de clientes
     print(_client_not_found())
 
 
-def delete_client(client_name):
+def delete_client(client_name): ## función para borrar un cliente
   global clients
 
   if client_name in clients:
@@ -37,24 +68,9 @@ def delete_client(client_name):
     print(_client_not_found())
 
 
-def _add_comma(): ## función para añadir una comma y reutilizar el código
-  global clients
-
-  clients += ','
-
-def _client_not_found():
+def _client_not_found(): ## para reutilizar el código
   return print('Client is not  found in clients\'s list')
 
-def _print_welcome(): ## función para crear una lista de comandos en terminal
-  print('WELCOME TO PLATZI VENTAS')
-  print('*' * 50)
-  print('What would you like to do today?')
-  print('[C]reate client')
-  print('[U]pdate client')
-  print('[D]elete client')
-
-def _get_client_name(): ## función para reutilizar la misma pregunta
-  return input('What\'s the client name?' + ' ')
 
 if __name__ == '__main__': ## punto de entrada de la ejecución del script en Python
   _print_welcome()
@@ -65,14 +81,31 @@ if __name__ == '__main__': ## punto de entrada de la ejecución del script en Py
   if command == 'C': ## palabra reservada command para interacturar con la consola
     client_name = _get_client_name()
     create_client(client_name)
+    #list_clients()
+    print(clients)
+
+  elif command == 'L':
     list_clients()
-  elif command == 'D': ## operación de delete
-    client_name = _get_client_name()
-    delete_client(client_name)
-    list_clients()
+
   elif command == 'U': ## operación de update
     client_name = _get_client_name()
     update_client(client_name)
-    list_clients()
+    #list_clients()
+    print(clients)
+
+  elif command == 'D': ## operación de delete
+    client_name = _get_client_name()
+    delete_client(client_name)
+    #list_clients()
+    print(clients)
+
+  elif command == 'S': ## operación de search
+    client_name = _get_client_name()
+    found = search_client(client_name)
+
+    if found:
+      print(f'The client {client_name} is in Client\'s list')
+    else:
+      print(f'The client {client_name} is not in our Client\'s list')
   else:
-    print('Invalid command')
+    print('ERROR Invalid Command')
