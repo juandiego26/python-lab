@@ -1,19 +1,27 @@
 import sys
+import csv ## importamos CSV
+import os
 
-clients = [
-  {
-    'name': 'Pablo',
-    'company': 'Google',
-    'email': 'pablo@google.com',
-    'position': 'software engineer'
-  },
-  {
-    'name': 'Ricardo',
-    'company': 'Facebook',
-    'email': 'ricardo@facebook.com',
-    'position': 'data engineer'
-  }
-] ## creamos un diccionario de clientes
+CLIENT_TABLE = '.clients.csv' # creamos el archivo con una constante
+CLIENT_SCHEMA = ['name', 'company', 'email', 'position'] ## lista que va a utilizar csv para crear los diccionarios
+clients = [] ## Arreglo donde donde se alamacenaran los clientes
+
+def _initialize_clients_from_storage(): ## funcion para leer nuestro CVS
+  with open(CLIENT_TABLE, mode='r') as f: ## context manager abrir la tabla
+    reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA) ## referencia al schema
+
+    for row in reader: ## inicializamos nuestra lista de clientes
+      clients.append(row) ## repesentación de un cliente como si fuera un diccionario
+
+
+def _save_client_to_storage(): ## función que guardar el archivo
+  tmp_table_name = f'{CLIENT_TABLE}.tmp' ## tabla temporal
+  with open(tmp_table_name, mode='w') as f: ## la escribimos
+    writer = csv.DictWriter(f, fieldnames=CLIENT_SCHEMA) ## escribimos en el archivo
+    writer.writerows(clients) ## escrimos todas las filas si las tenemos en una lista (lista de diccionarios)
+
+    os.remove(CLIENT_TABLE) ## manipular el sistema OS elimine la tabla temporal
+    os.rename(tmp_table_name, CLIENT_TABLE) ## renombramos el archvo
 
 
 def _print_welcome(): ## función para crear una lista de comandos en terminal
@@ -30,7 +38,7 @@ def _get_client_field(field_name):
   field = None
 
   while not field:
-    field = input(f'What\'s the client {field_name}:'+ ' ').capitalize()
+    field = input(f'What\'s the client {field_name}:'+ ' ')
 
   return field
 
@@ -61,21 +69,23 @@ def create_client(client): ## función create_client con el parámetro client_na
 
 
 def search_client(client_name): ## función para buscar un cliente
+  global clients
 
   for client in clients:
-    if client != client_name:
+    if client['name'] != client_name:
       continue ## continue
     else:
       return True
 
 
 def list_clients(): ## función para imprimir toda la lista de clientes
+  print(' uid  | name  | company | email | position  ')
+  print('*' * 50)
   for idx, client in enumerate(clients): ## para imprmir la lista de clientes
     print(f'''{idx} | {client['name']} | {client['company']} | {client['email']} | {client['position']}''')
 
 
 def update_client(client_id, updated_client): ## funcion para actualizar la lista de clientes
-  global clients
 
   if len(clients) -1 >= client_id:
     clients[client_id] = updated_client
@@ -108,6 +118,8 @@ def _get_client_from_user():
 
 
 if __name__ == '__main__': ## punto de entrada de la ejecución del script en Python
+  _initialize_clients_from_storage() ## inicializamos al principio de nuestro archivo
+
   _print_welcome()
 
   command = input() ## function buil-in input para la consola
@@ -117,7 +129,7 @@ if __name__ == '__main__': ## punto de entrada de la ejecución del script en Py
     client = _get_client_from_user()
 
     create_client(client)
-    list_clients()
+    # list_clients()
     # print(clients)
 
   elif command == 'L':
@@ -128,14 +140,14 @@ if __name__ == '__main__': ## punto de entrada de la ejecución del script en Py
     updated_client = _get_client_from_user()
 
     update_client(client_id, updated_client)
-    list_clients()
+    # list_clients()
     # print(clients)
 
   elif command == 'D': ## operación de delete
     client_id = int(_get_client_field('id'))
 
     delete_client(client_id)
-    list_clients()
+    # list_clients()
     # print(clients)
 
   elif command == 'S': ## operación de search
@@ -148,3 +160,5 @@ if __name__ == '__main__': ## punto de entrada de la ejecución del script en Py
       print(f'The client {client_name} is not in our Client\'s list')
   else:
     print('ERROR Invalid Command')
+
+  _save_client_to_storage() ## y al final salvamos el archivo
