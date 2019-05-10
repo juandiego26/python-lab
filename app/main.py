@@ -7,11 +7,15 @@ CLIENT_SCHEMA = ['name', 'company', 'email', 'position'] ## lista que va a utili
 clients = [] ## Arreglo donde donde se alamacenaran los clientes
 
 def _initialize_clients_from_storage(): ## funcion para leer nuestro CVS
-  with open(CLIENT_TABLE, mode='r') as f: ## context manager abrir la tabla
-    reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA) ## referencia al schema
+  if not os.path.exists(CLIENT_TABLE): ## para generar el archivo automáticamente si no existe
+    with open(CLIENT_TABLE, mode='w') as f: ## context manager abrir la tabla
+      pass
+  else: ## si existe se ejecuta normal con el modo reader
+    with open(CLIENT_TABLE, mode='r') as f:
+      reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)
 
-    for row in reader: ## inicializamos nuestra lista de clientes
-      clients.append(row) ## repesentación de un cliente como si fuera un diccionario
+      for row in reader: ## inicializamos nuestra lista de clientes
+        clients.append(row) ## repesentación de un cliente como si fuera un diccionario
 
 
 def _save_client_to_storage(): ## función que guardar el archivo
